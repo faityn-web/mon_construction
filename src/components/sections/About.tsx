@@ -58,7 +58,7 @@ export default function About() {
           >
             <div className="relative rounded-2xl overflow-hidden shadow-2xl">
               <img
-                src="/api/placeholder/600/400"
+                src="https://res.cloudinary.com/dsf9igcmh/image/upload/v1774009025/ChatGPT_Image_Mar_20_2026_08_16_05_PM_xkivkp.png"
                 alt="Барилгын инженер"
                 className="w-full h-full object-cover"
               />

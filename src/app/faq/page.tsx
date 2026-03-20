@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import { ChevronDown, HelpCircle, Phone, Mail, Clock } from 'lucide-react'
+import ContactInfo from '@/components/ui/ContactInfo'
 
 const faqCategories = [
   {
@@ -21,7 +22,7 @@ const faqCategories = [
     id: 'technical',
     title: 'Техникийн асуулт',
     icon: HelpCircle,
-    color: 'green'
+    color: 'blue'
   }
 ]
 
@@ -127,7 +128,7 @@ export default function FAQ() {
                   onClick={() => setActiveCategory(category.id)}
                   className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all ${
                     activeCategory === category.id
-                      ? `bg-${category.color}-600 text-white shadow-lg`
+                      ? `bg-${category.color}-500 text-white shadow-lg`
                       : 'bg-white text-gray-700 hover:bg-gray-100 shadow'
                   }`}
                 >
@@ -201,14 +202,16 @@ export default function FAQ() {
               <div className="flex flex-col items-center">
                 <Phone className="w-8 h-8 mb-2 text-orange-400" />
                 <h3 className="font-semibold mb-1">Утас</h3>
-                <p className="text-blue-200">+976 9999-9999</p>
+                <p className="text-blue-200">+976 00000000</p>
                 <p className="text-sm text-blue-300">Ажлын өдөр 9:00-18:00</p>
               </div>
               
               <div className="flex flex-col items-center">
                 <Mail className="w-8 h-8 mb-2 text-orange-400" />
                 <h3 className="font-semibold mb-1">Имэйл</h3>
-                <p className="text-blue-200">info@monconstr.mn</p>
+                <p className="text-blue-200">
+                  <ContactInfo showPhone={false} showEmail={true} showAddress={false} className="text-blue-200" />
+                </p>
                 <p className="text-sm text-blue-300">24/7 онлайн</p>
               </div>
               
@@ -222,7 +225,7 @@ export default function FAQ() {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href="tel:+97699999999"
+                href="tel:+97600000000"
                 className="px-6 py-3 bg-orange-500 hover:bg-orange-600 rounded-lg font-semibold transition-colors"
               >
                 Шууд залгах

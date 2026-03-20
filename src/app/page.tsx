@@ -11,7 +11,6 @@ import Footer from "@/components/ui/Footer";
 export default function Home() {
   return (
     <div className="min-h-screen">
-      1
       <Navbar />
       <Hero />
       <Services />

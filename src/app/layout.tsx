@@ -1,26 +1,12 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { generateMetadata } from "./metadata";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
 });
-
-export const metadata: Metadata = {
-  title: "МонКонстракшн - Барилгын Шилдэг Шийдэл",
-  description:
-    "Монгол Улсын тэргүүлэгч барилгын компани. Чанартай барилга, найдвартай гүйцэтгэл, 10+ жилийн туршлага.",
-  keywords:
-    "барилга, барилгын компани, орон сууц, оффис, үйлдвэрийн барилга, интерьер дизайн, зураг төсөл",
-  authors: [{ name: "МонКонстракшн ХХК" }],
-  openGraph: {
-    title: "МонКонстракшн - Барилгын Шилдэг Шийдэл",
-    description: "Чанартай барилга, найдвартай гүйцэтгэл",
-    type: "website",
-    locale: "mn_MN",
-  },
-};
 
 export default function RootLayout({
   children,
@@ -35,3 +21,5 @@ export default function RootLayout({
     </html>
   );
 }
+
+export const metadata = generateMetadata();

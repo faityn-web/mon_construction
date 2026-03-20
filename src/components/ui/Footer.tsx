@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
 import {
   Facebook,
   Twitter,
@@ -11,7 +12,10 @@ import {
   MapPin,
   ArrowUp,
   Building,
-} from "lucide-react";
+} from 'lucide-react'
+import ContactInfo from './ContactInfo'
+import { getSettings } from '@/lib/supabase-data'
+import { SiteSettings } from '@/types'
 
 const footerLinks = {
   Үйлчилгээ: [
@@ -46,6 +50,16 @@ const socialLinks = [
 ];
 
 export default function Footer() {
+  const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
+  
+  useEffect(() => {
+    const fetchSettings = async () => {
+      const settings = await getSettings();
+      setSiteSettings(settings);
+    };
+    fetchSettings();
+  }, []);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -65,7 +79,9 @@ export default function Footer() {
           >
             <div className="flex items-center mb-6">
               <Building className="w-8 h-8 text-orange-500 mr-3" />
-              <h3 className="text-2xl font-bold">МонКонстракшн</h3>
+              <h3 className="text-2xl font-bold">
+                {siteSettings?.company_name || 'МонКонстракшн'}
+              </h3>
             </div>
 
             <p className="text-blue-200 mb-6 leading-relaxed">
@@ -77,15 +93,15 @@ export default function Footer() {
             <div className="space-y-3">
               <div className="flex items-center text-blue-200">
                 <Phone className="w-4 h-4 mr-3 text-orange-500" />
-                <span>+976 9999-9999</span>
+                <ContactInfo showPhone={true} showEmail={false} showAddress={false} className="text-blue-200" />
               </div>
               <div className="flex items-center text-blue-200">
                 <Mail className="w-4 h-4 mr-3 text-orange-500" />
-                <span>info@monconstr.mn</span>
+                <ContactInfo showPhone={false} showEmail={true} showAddress={false} className="text-blue-200" />
               </div>
               <div className="flex items-center text-blue-200">
                 <MapPin className="w-4 h-4 mr-3 text-orange-500" />
-                <span>Улаанбаатар, 1-р хороо</span>
+                <ContactInfo showPhone={false} showEmail={false} showAddress={true} className="text-blue-200" />
               </div>
             </div>
 
@@ -179,7 +195,7 @@ export default function Footer() {
               transition={{ duration: 0.6 }}
               className="text-blue-200 text-sm mb-4 md:mb-0"
             >
-              © 2024 МонКонстракшн ХХК. Бүх эрх хуулиар хамгаалагдсан.
+              © 2024 {siteSettings?.company_name || 'МонКонстракшн'} ХХК. Бүх эрх хуулиар хамгаалагдсан.
             </motion.div>
 
             <motion.div

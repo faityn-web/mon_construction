@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { FileText, Building, Palette, Wrench, ArrowRight, CheckCircle } from 'lucide-react'
 import { getServices } from '@/lib/supabase-data'
+import Navbar from '@/components/ui/Navbar'
 
 const iconMap: { [key: string]: any } = {
   'FileText': FileText,
@@ -50,8 +51,9 @@ export default function ServicesPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Navbar />
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-900 to-blue-700 text-white py-20">
+      <section className="bg-gradient-to-br from-blue-900 to-blue-700 text-white py-20 mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}

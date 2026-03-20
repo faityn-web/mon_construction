@@ -2,6 +2,22 @@ import { supabase } from "./supabase";
 import { Project, Service, Testimonial, Contact, SiteSettings } from "@/types";
 
 // Projects
+export const getProjectsHome = async (): Promise<Project[]> => {
+  const { data, error } = await supabase
+    .from("projects")
+    .select("*")
+    .limit(6)
+    .order("created_at", { ascending: false })
+    .order("id", { ascending: false });
+
+  if (error) {
+    console.error("Error fetching projects:", error);
+    return [];
+  }
+
+  return data || [];
+};
+
 export const getProjects = async (): Promise<Project[]> => {
   const { data, error } = await supabase
     .from("projects")
@@ -284,6 +300,23 @@ export const updateSettings = async (
 
   if (error) {
     console.error("Error updating settings:", error);
+    throw error;
+  }
+
+  return data;
+};
+
+export const saveSettings = async (
+  settings: SiteSettings,
+): Promise<SiteSettings> => {
+  const { data, error } = await supabase
+    .from("site_settings")
+    .upsert(settings)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error saving settings:", error);
     throw error;
   }
 

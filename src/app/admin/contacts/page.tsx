@@ -23,8 +23,18 @@ export default function AdminContacts() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    setContacts(getContacts())
-    setLoading(false)
+    const loadContacts = async () => {
+      try {
+        const data = await getContacts()
+        setContacts(data)
+      } catch (error) {
+        console.error('Error loading contacts:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    loadContacts()
   }, [])
 
   const filteredContacts = contacts.filter(contact => {
@@ -179,7 +189,7 @@ export default function AdminContacts() {
                       
                       <div className="flex items-center justify-between mt-3">
                         <span className="text-xs text-gray-500">
-                          {new Date(contact.createdAt).toLocaleDateString('mn-MN', {
+                          {new Date(contact.created_at).toLocaleDateString('mn-MN', {
                             year: 'numeric',
                             month: 'short',
                             day: 'numeric',
@@ -281,7 +291,7 @@ export default function AdminContacts() {
                 <div>
                   <label className="text-sm font-medium text-gray-500">Илгээсэн огноо</label>
                   <p className="text-gray-900">
-                    {new Date(selectedContact.createdAt).toLocaleDateString('mn-MN', {
+                    {new Date(selectedContact.created_at).toLocaleDateString('mn-MN', {
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric',

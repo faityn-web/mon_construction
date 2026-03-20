@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { ExternalLink, Filter, Search, Calendar, MapPin, Building } from 'lucide-react'
 import { getProjects } from '@/lib/supabase-data'
+import Navbar from '@/components/ui/Navbar'
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<any[]>([])
@@ -63,8 +64,9 @@ export default function ProjectsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Navbar />
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-900 to-blue-700 text-white py-20">
+      <section className="bg-gradient-to-br from-blue-900 to-blue-700 text-white py-20 mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}

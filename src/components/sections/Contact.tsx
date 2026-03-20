@@ -1,9 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState } from "react";
-import { Phone, Mail, MapPin, Send, Clock, MessageSquare } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Phone, Mail, MapPin, Clock, Send, MessageSquare } from "lucide-react";
+import ContactInfo from "../ui/ContactInfo";
 import { createContact } from "@/lib/supabase-data";
+import { getSettings } from "@/lib/supabase-data";
+import { SiteSettings } from "@/types";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -17,6 +20,21 @@ export default function Contact() {
   const [submitStatus, setSubmitStatus] = useState<
     "idle" | "success" | "error"
   >("idle");
+  
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const data = await getSettings();
+        setSettings(data);
+      } catch (error) {
+        console.error('Error loading settings:', error);
+      }
+    };
+
+    loadSettings();
+  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -63,19 +81,19 @@ export default function Contact() {
     {
       icon: Phone,
       title: "Утас",
-      content: "+976 9999-9999",
+      content: <ContactInfo showPhone={true} showEmail={false} showAddress={false} className="font-medium" />,
       description: "Ажлын өдөр 9:00-18:00",
     },
     {
       icon: Mail,
       title: "Имэйл",
-      content: "info@monconstr.mn",
+      content: <ContactInfo showPhone={false} showEmail={true} showAddress={false} className="font-medium" />,
       description: "24/7 онлайн",
     },
     {
       icon: MapPin,
       title: "Хаяг",
-      content: "Улаанбаатар хот, 1-р хороо, Бөхийн өргөөний гудамж-8",
+      content: <ContactInfo showPhone={false} showEmail={false} showAddress={true} className="font-medium" />,
       description: "Байршил",
     },
     {
@@ -296,10 +314,10 @@ export default function Contact() {
                         <h4 className="font-semibold text-blue-900 mb-1">
                           {info.title}
                         </h4>
-                        <p className="text-gray-700 mb-1">{info.content}</p>
-                        <p className="text-sm text-gray-500">
+                        <div className="text-gray-700 mb-1">{info.content}</div>
+                        <div className="text-sm text-gray-500">
                           {info.description}
-                        </p>
+                        </div>
                       </div>
                     </div>
                   </motion.div>
@@ -327,10 +345,10 @@ export default function Contact() {
                   Шууд залгах
                 </a>
                 <a
-                  href="mailto:info@monconstr.mn"
+                  href={`mailto:${settings?.email || ''}`}
                   className="border border-white hover:bg-white hover:text-blue-900 px-4 py-2 rounded-lg font-medium transition-all"
                 >
-                  Имэйл илгээх
+                  <ContactInfo showPhone={false} showEmail={true} showAddress={false} />
                 </a>
               </div>
             </motion.div>

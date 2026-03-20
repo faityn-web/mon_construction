@@ -55,6 +55,18 @@ export interface User {
   last_login?: string;
 }
 
+export interface Hero {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  image: string;
+  order_num: number;
+  active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface SiteSettings {
   id: string;
   company_name: string;

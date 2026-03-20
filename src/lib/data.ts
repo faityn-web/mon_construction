@@ -1,4 +1,4 @@
-import { Project, Service, Testimonial, Contact, SiteSettings } from "@/types";
+import { Project, Service, Testimonial, Contact, SiteSettings, Hero } from "@/types";
 import { supabase } from "./supabase";
 
 // Projects functions
@@ -220,6 +220,55 @@ export const saveSettings = async (settings: SiteSettings): Promise<void> => {
   if (error) throw error;
 };
 
+// Hero functions
+export const getHeroes = async (): Promise<Hero[]> => {
+  const { data, error } = await supabase
+    .from("heroes")
+    .select("*")
+    .order("order_num", { ascending: true });
+
+  if (error) throw error;
+  return data || [];
+};
+
+export const saveHeroes = async (heroes: Hero[]): Promise<void> => {
+  for (const hero of heroes) {
+    const { error } = await supabase.from("heroes").upsert(hero);
+    if (error) throw error;
+  }
+};
+
+export const addHero = async (
+  hero: Omit<Hero, "id" | "created_at" | "updated_at">,
+): Promise<Hero> => {
+  const { data, error } = await supabase
+    .from("heroes")
+    .insert(hero)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
+export const updateHero = async (
+  id: string,
+  updates: Partial<Hero>,
+): Promise<void> => {
+  const { error } = await supabase
+    .from("heroes")
+    .update(updates)
+    .eq("id", id);
+
+  if (error) throw error;
+};
+
+export const deleteHero = async (id: string): Promise<void> => {
+  const { error } = await supabase.from("heroes").delete().eq("id", id);
+
+  if (error) throw error;
+};
+
 // Initialize data function (no longer needed for localStorage)
 export const initializeData = async () => {
   // Check if settings exist, if not create initial data
@@ -249,5 +298,40 @@ export const initializeData = async () => {
       updated_at: new Date().toISOString(),
     };
     await saveSettings(initialSettings);
+  }
+
+  // Initialize hero data if empty
+  const heroes = await getHeroes();
+  if (heroes.length === 0) {
+    const initialHeroes: Omit<Hero, "id" | "created_at" | "updated_at">[] = [
+      {
+        title: "Барилгын Шилдэг Шийдэл",
+        subtitle: "Чанартай барилга, найдвартай гүйцэтгэл",
+        description: "Манай компани таны бүх барилгын хэрэгцээг шийдэхэд бэлэн",
+        image: "/api/placeholder/1920/1080",
+        order_num: 1,
+        active: true,
+      },
+      {
+        title: "Орчин Үеийн Технологи",
+        subtitle: "Дэлхийн стандартын барилга угсралт",
+        description: "Сүүлийн үеийн техник технологиор таны төслийг хэрэгжүүлнэ",
+        image: "/api/placeholder/1920/1080",
+        order_num: 2,
+        active: true,
+      },
+      {
+        title: "Туршлага & Чанар",
+        subtitle: "10 жилийн туршлагатай мэргэжилтнүүд",
+        description: "Чанартай гүйцэтгэл, таны итгэл найдварыг хүлээн зөвшөөрнө",
+        image: "/api/placeholder/1920/1080",
+        order_num: 3,
+        active: true,
+      },
+    ];
+
+    for (const hero of initialHeroes) {
+      await addHero(hero);
+    }
   }
 };

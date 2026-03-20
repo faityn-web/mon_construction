@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { ExternalLink, Filter } from "lucide-react";
-import { getProjects } from "@/lib/supabase-data";
+import { getProjects, getProjectsHome } from "@/lib/supabase-data";
 
 const projects = [
   {
@@ -60,7 +60,7 @@ export default function Projects() {
   useEffect(() => {
     const loadProjects = async () => {
       try {
-        const data = await getProjects();
+        const data = await getProjectsHome();
         console.log(data);
 
         setProjectData(data.length > 0 ? data : projects);
@@ -146,7 +146,6 @@ export default function Projects() {
             >
               {/* Project Image */}
               <div className="relative h-64 overflow-hidden">
-                {project.image}
                 <img
                   src={project.image}
                   alt={project.title}
@@ -197,7 +196,7 @@ export default function Projects() {
           className="text-center mt-16"
         >
           <a
-            href="#contact"
+            href="/projects"
             className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-lg font-semibold transition-all transform hover:scale-105"
           >
             Бүх төслийг харах
