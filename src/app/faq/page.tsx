@@ -6,6 +6,7 @@ import { ChevronDown, HelpCircle, Phone, Mail, Clock } from 'lucide-react'
 import ContactInfo from '@/components/ui/ContactInfo'
 import { getFAQsByCategory } from '@/lib/data'
 import type { FAQ } from '@/types'
+import Navbar from '@/components/ui/Navbar'
 
 const faqCategories = [
   {
@@ -59,7 +60,7 @@ export default function FAQ() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
+      <Navbar />
       <section className="bg-gradient-to-br from-blue-900 to-blue-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div

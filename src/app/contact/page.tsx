@@ -7,6 +7,7 @@ import { createContact } from '@/lib/supabase-data'
 import ContactInfo from '@/components/ui/ContactInfo'
 import { getSettings } from '@/lib/supabase-data'
 import { SiteSettings } from '@/types'
+import Navbar from '@/components/ui/Navbar'
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -112,6 +113,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Navbar />
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-900 to-blue-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
