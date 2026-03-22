@@ -89,3 +89,14 @@ export interface SiteSettings {
   created_at: string;
   updated_at: string;
 }
+
+export interface FAQ {
+  id: string;
+  category: string;
+  question: string;
+  answer: string;
+  order_num: number;
+  active: boolean;
+  created_at: string;
+  updated_at: string;
+}

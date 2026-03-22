@@ -1,4 +1,4 @@
-import { Project, Service, Testimonial, Contact, SiteSettings, Hero } from "@/types";
+import { Project, Service, Testimonial, Contact, SiteSettings, Hero, FAQ } from "@/types";
 import { supabase } from "./supabase";
 
 // Projects functions
@@ -347,6 +347,187 @@ export const initializeData = async () => {
 
     for (const hero of initialHeroes) {
       await addHero(hero);
+    }
+  }
+
+  // Initialize FAQ data if empty
+  await initializeFAQData();
+};
+
+// FAQ functions
+export const getFAQs = async (): Promise<FAQ[]> => {
+  const { data, error } = await supabase
+    .from("faqs")
+    .select("*")
+    .order("category", { ascending: true })
+    .order("order_num", { ascending: true });
+
+  if (error) throw error;
+  return data || [];
+};
+
+export const getFAQsByCategory = async (category: string): Promise<FAQ[]> => {
+  const { data, error } = await supabase
+    .from("faqs")
+    .select("*")
+    .eq("category", category)
+    .order("order_num", { ascending: true });
+
+  if (error) throw error;
+  return data || [];
+};
+
+export const saveFAQs = async (faqs: FAQ[]): Promise<void> => {
+  for (const faq of faqs) {
+    const { error } = await supabase.from("faqs").upsert(faq);
+    if (error) throw error;
+  }
+};
+
+export const addFAQ = async (
+  faq: Omit<FAQ, "id" | "created_at" | "updated_at">,
+): Promise<FAQ> => {
+  const { data, error } = await supabase
+    .from("faqs")
+    .insert(faq)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
+export const updateFAQ = async (
+  id: string,
+  updates: Partial<FAQ>,
+): Promise<void> => {
+  const { error } = await supabase
+    .from("faqs")
+    .update(updates)
+    .eq("id", id);
+
+  if (error) throw error;
+};
+
+export const getFAQ = async (id: string): Promise<FAQ | null> => {
+  const { data, error } = await supabase
+    .from("faqs")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error("Error fetching FAQ:", error);
+    return null;
+  }
+
+  return data;
+};
+
+export const deleteFAQ = async (id: string): Promise<void> => {
+  const { error } = await supabase.from("faqs").delete().eq("id", id);
+
+  if (error) throw error;
+};
+
+// Initialize sample FAQ data
+export const initializeFAQData = async () => {
+  const existingFAQs = await getFAQs();
+  if (existingFAQs.length === 0) {
+    const sampleFAQs: Omit<FAQ, "id" | "created_at" | "updated_at">[] = [
+      // General FAQs
+      {
+        category: "general",
+        question: "МонКонстракшн хэдэн жилийн туршлагатай вэ?",
+        answer: "Манай компани 2014 оноос хойш Монгол Улсын барилгын салбарт тэргүүлэх байр суурь эзэлж, 10 жилийн туршлагатай бөгөөд 120 гаруй амжилттай төслийг хэрэгжүүлсэн байна.",
+        order_num: 0,
+        active: true,
+      },
+      {
+        category: "general",
+        question: "Ямар төрлийн барилга барих чадвартай вэ?",
+        answer: "Бид орон сууц, оффис, үйлдвэрийн барилга, логистикийн төв, бизнес төв зэрэг бүх төрлийн барилгын ажлыг хийдэг. Мөн интерьер дизайн, инженерийн шийдэл зэрэг нэмэлт үйлчилгээ үзүүлдэг.",
+        order_num: 1,
+        active: true,
+      },
+      {
+        category: "general",
+        question: "Бид ямар материал ашигладаг вэ?",
+        answer: "Бид зөвхөн олон улсын стандартын чанартай, бат бөх, экологийн хувьд аюулгүй материалыг ашигладаг. Хамгийн сүүлийн үеийн барилгын материал, технологийг нэвтрүүлдэг.",
+        order_num: 2,
+        active: true,
+      },
+      {
+        category: "general",
+        question: "Баталгаат хугацаа хэд вэ?",
+        answer: "Бид бүх барилгад 2-10 жилийн баталгаат хугацаа олгодог. Мөн ашиглалтын үеийн үйлчилгээ, засвар үйлчилгээ үзүүлдэг.",
+        order_num: 3,
+        active: true,
+      },
+
+      // Project FAQs
+      {
+        category: "projects",
+        question: "Төсөл хэд хиргээд дуусдаг вэ?",
+        answer: "Төслийн хэмжээ, нарийвчлалаас хамаарч 6 сараас 2 хүртэлх хугацаанд дуусдаг. Төсөл эхлэхээс өмнө нарийвчилсан хуваарь, төлөвлөгөө төвлөрүүлдэг.",
+        order_num: 0,
+        active: true,
+      },
+      {
+        category: "projects",
+        question: "Төслийн өртөг яаж тооцогддог вэ?",
+        answer: "Төслийн өртгийг хэмжээ, материал, ажлын хүндрэл, хугацаа зэрэг олон хүчин зүйлс дээр суурилан нарийвчилж тооцдог. Үнэгүй зөвлөгөө, үнийн санал олгодог.",
+        order_num: 1,
+        active: true,
+      },
+      {
+        category: "projects",
+        question: "Төслөөсөө татгалзах боломжтой юу?",
+        answer: "Гэрээ байгуулахаас өмнө та өөрийн хүсэлтээр татгалзах боломжтой. Гэрээ байгуулсны дараа талуудын харилцан тохиролцоогоор татгалзах боломжтой.",
+        order_num: 2,
+        active: true,
+      },
+      {
+        category: "projects",
+        question: "Төслийн явцад ямар мэдээлэл өгдөг вэ?",
+        answer: "Бид төслийн явцыг 7 хоног тутамд зураг, тайлбартайгаар мэдэгддэг. Мөн шууд холбогдох боломж, онлайн хянах системтэй.",
+        order_num: 3,
+        active: true,
+      },
+
+      // Technical FAQs
+      {
+        category: "technical",
+        question: "Барилгын зураг төсөл ямар хөтөч ашигладаг вэ?",
+        answer: "Бид AutoCAD, Revit, SketchUp, 3D Max зэрэг сүүлийн үеийн програм хангамж ашиглан нарийвчилсан зураг төсөл хийдэг. 3D загвар, визуалчлал хийдэг.",
+        order_num: 0,
+        active: true,
+      },
+      {
+        category: "technical",
+        question: "Барилгын стандартуудыг хангадаг уу?",
+        answer: "Тиймээ! Бид Монгол Улсын барилгын стандарт (MNS), олон улсын стандарт (ISO) бүгдийг хангадаг. Батлан хамгаалалтын шаардлагыг мөн хангадаг.",
+        order_num: 1,
+        active: true,
+      },
+      {
+        category: "technical",
+        question: "Эрчим хүчний хэмнэлттэй барилга барих уу?",
+        answer: "Тиймээ! Бид эрчим хүчний хэмнэлттэй, ногоон барилгын технологи ашигладаг. Нарны цахилгаан, дулааны насос, хаалгагч систем суулгадаг.",
+        order_num: 2,
+        active: true,
+      },
+      {
+        category: "technical",
+        question: "Барилгын аюулгүй байдал хэр хангагддаг вэ?",
+        answer: "Бид аюулгүй байдлыг тэргүүлэх чухал зүйл гэж үздэг. Бүх ажилчид мэргэжлийн сургалттай, аюулгүй байдлын хэрэгсэлтэй, дахин сайжруулалт хийдэг.",
+        order_num: 3,
+        active: true,
+      },
+    ];
+
+    for (const faq of sampleFAQs) {
+      await addFAQ(faq);
     }
   }
 };

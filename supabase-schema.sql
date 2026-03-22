@@ -87,6 +87,18 @@ CREATE TABLE site_settings (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- FAQs table
+CREATE TABLE faqs (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  category TEXT NOT NULL,
+  question TEXT NOT NULL,
+  answer TEXT NOT NULL,
+  order_num INTEGER NOT NULL DEFAULT 0,
+  active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- Enable Row Level Security
 ALTER TABLE heroes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
@@ -95,6 +107,7 @@ ALTER TABLE testimonials ENABLE ROW LEVEL SECURITY;
 ALTER TABLE contacts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE faqs ENABLE ROW LEVEL SECURITY;
 
 -- Create policies for public read access (for frontend)
 CREATE POLICY "Enable read access for all users" ON heroes FOR SELECT USING (true);
@@ -102,6 +115,7 @@ CREATE POLICY "Enable read access for all users" ON projects FOR SELECT USING (t
 CREATE POLICY "Enable read access for all users" ON services FOR SELECT USING (true);
 CREATE POLICY "Enable read access for all users" ON testimonials FOR SELECT USING (true);
 CREATE POLICY "Enable read access for all users" ON site_settings FOR SELECT USING (true);
+CREATE POLICY "Enable read access for all users" ON faqs FOR SELECT USING (true);
 
 -- Create policies for authenticated users (admin operations)
 CREATE POLICY "Enable insert for authenticated users" ON heroes FOR INSERT WITH CHECK (auth.role() = 'authenticated');
@@ -132,6 +146,10 @@ CREATE POLICY "Enable insert for authenticated users" ON site_settings FOR INSER
 CREATE POLICY "Enable update for authenticated users" ON site_settings FOR UPDATE USING (auth.role() = 'authenticated');
 CREATE POLICY "Enable delete for authenticated users" ON site_settings FOR DELETE USING (auth.role() = 'authenticated');
 
+CREATE POLICY "Enable insert for authenticated users" ON faqs FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Enable update for authenticated users" ON faqs FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Enable delete for authenticated users" ON faqs FOR DELETE USING (auth.role() = 'authenticated');
+
 -- Create indexes for better performance
 CREATE INDEX idx_heroes_active ON heroes(active);
 CREATE INDEX idx_heroes_order ON heroes(order_num);
@@ -142,6 +160,9 @@ CREATE INDEX idx_services_order ON services(order_num);
 CREATE INDEX idx_testimonials_active ON testimonials(active);
 CREATE INDEX idx_contacts_status ON contacts(status);
 CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_faqs_active ON faqs(active);
+CREATE INDEX idx_faqs_category ON faqs(category);
+CREATE INDEX idx_faqs_order ON faqs(order_num);
 
 -- Insert initial hero data
 INSERT INTO heroes (title, subtitle, description, image, order_num, active) VALUES 
@@ -178,3 +199,4 @@ CREATE TRIGGER update_testimonials_updated_at BEFORE UPDATE ON testimonials FOR 
 CREATE TRIGGER update_contacts_updated_at BEFORE UPDATE ON contacts FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_site_settings_updated_at BEFORE UPDATE ON site_settings FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_faqs_updated_at BEFORE UPDATE ON faqs FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();

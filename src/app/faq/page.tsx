@@ -1,9 +1,11 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ChevronDown, HelpCircle, Phone, Mail, Clock } from 'lucide-react'
 import ContactInfo from '@/components/ui/ContactInfo'
+import { getFAQsByCategory } from '@/lib/data'
+import type { FAQ } from '@/types'
 
 const faqCategories = [
   {
@@ -26,68 +28,34 @@ const faqCategories = [
   }
 ]
 
-const faqData = {
-  general: [
-    {
-      question: 'МонКонстракшн хэдэн жилийн туршлагатай вэ?',
-      answer: 'Манай компани 2014 оноос хойш Монгол Улсын барилгын салбарт тэргүүлэх байр суурь эзэлж, 10 жилийн туршлагатай бөгөөд 120 гаруй амжилттай төслийг хэрэгжүүлсэн байна.'
-    },
-    {
-      question: 'Ямар төрлийн барилга барих чадвартай вэ?',
-      answer: 'Бид орон сууц, оффис, үйлдвэрийн барилга, логистикийн төв, бизнес төв зэрэг бүх төрлийн барилгын ажлыг хийдэг. Мөн интерьер дизайн, инженерийн шийдэл зэрэг нэмэлт үйлчилгээ үзүүлдэг.'
-    },
-    {
-      question: 'Бид ямар материал ашигладаг вэ?',
-      answer: 'Бид зөвхөн олон улсын стандартын чанартай, бат бөх, экологийн хувьд аюулгүй материалыг ашигладаг. Хамгийн сүүлийн үеийн барилгын материал, технологийг нэвтрүүлдэг.'
-    },
-    {
-      question: 'Баталгаат хугацаа хэд вэ?',
-      answer: 'Бид бүх барилгад 2-10 жилийн баталгаат хугацаа олгодог. Мөн ашиглалтын үеийн үйлчилгээ, засвар үйлчилгээ үзүүлдэг.'
-    }
-  ],
-  projects: [
-    {
-      question: 'Төсөл хэд хиргээд дуусдаг вэ?',
-      answer: 'Төслийн хэмжээ, нарийвчлалаас хамаарч 6 сараас 2 хүртэлх хугацаанд дуусдаг. Төсөл эхлэхээс өмнө нарийвчилсан хуваарь, төлөвлөгөө төвлөрүүлдэг.'
-    },
-    {
-      question: 'Төслийн өртөг яаж тооцогддог вэ?',
-      answer: 'Төслийн өртгийг хэмжээ, материал, ажлын хүндрэл, хугацаа зэрэг олон хүчин зүйлс дээр суурилан нарийвчилж тооцдог. Үнэгүй зөвлөгөө, үнийн санал олгодог.'
-    },
-    {
-      question: 'Төслөөсөө татгалзах боломжтой юу?',
-      answer: 'Гэрээ байгуулахаас өмнө та өөрийн хүсэлтээр татгалзах боломжтой. Гэрээ байгуулсны дараа талуудын харилцан тохиролцоогоор татгалзах боломжтой.'
-    },
-    {
-      question: 'Төслийн явцад ямар мэдээлэл өгдөг вэ?',
-      answer: 'Бид төслийн явцыг 7 хоног тутамд зураг, тайлбартайгаар мэдэгддэг. Мөн шууд холбогдох боломж, онлайн хянах системтэй.'
-    }
-  ],
-  technical: [
-    {
-      question: 'Барилгын зураг төсөл ямар хөтөч ашигладаг вэ?',
-      answer: 'Бид AutoCAD, Revit, SketchUp, 3D Max зэрэг сүүлийн үеийн програм хангамж ашиглан нарийвчилсан зураг төсөл хийдэг. 3D загвар, визуалчлал хийдэг.'
-    },
-    {
-      question: 'Барилгын стандартуудыг хангадаг уу?',
-      answer: 'Тиймээ! Бид Монгол Улсын барилгын стандарт (MNS), олон улсын стандарт (ISO) бүгдийг хангадаг. Батлан хамгаалалтын шаардлагыг мөн хангадаг.'
-    },
-    {
-      question: 'Эрчим хүчний хэмнэлттэй барилга барих уу?',
-      answer: 'Тиймээ! Бид эрчим хүчний хэмнэлттэй, ногоон барилгын технологи ашигладаг. Нарны цахилгаан, дулааны насос, хаалгагч систем суулгадаг.'
-    },
-    {
-      question: 'Барилгын аюулгүй байдал хэр хангагддаг вэ?',
-      answer: 'Бид аюулгүй байдлыг тэргүүлэх чухал зүйл гэж үздэг. Бүх ажилчид мэргэжлийн сургалттай, аюулгүй байдлын хэрэгсэлтэй, дахин сайжруулалт хийдэг.'
-    }
-  ]
-}
-
 export default function FAQ() {
   const [activeCategory, setActiveCategory] = useState('general')
   const [expandedQuestion, setExpandedQuestion] = useState<number | null>(null)
+  const [faqs, setFaqs] = useState<FAQ[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const currentFAQs = faqData[activeCategory as keyof typeof faqData] || []
+  useEffect(() => {
+    const loadFAQs = async () => {
+      try {
+        const data = await getFAQsByCategory(activeCategory)
+        setFaqs(data)
+      } catch (error) {
+        console.error('Error loading FAQs:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadFAQs()
+  }, [activeCategory])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900"></div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -146,9 +114,9 @@ export default function FAQ() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="space-y-4"
           >
-            {currentFAQs.map((faq, index) => (
+            {faqs.map((faq, index: number) => (
               <motion.div
-                key={index}
+                key={faq.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -175,9 +143,9 @@ export default function FAQ() {
                     transition={{ duration: 0.3 }}
                     className="px-6 pb-4"
                   >
-                    <p className="text-gray-600 leading-relaxed">
+                    <div className="text-gray-600 leading-relaxed">
                       {faq.answer}
-                    </p>
+                    </div>
                   </motion.div>
                 )}
               </motion.div>
@@ -209,9 +177,9 @@ export default function FAQ() {
               <div className="flex flex-col items-center">
                 <Mail className="w-8 h-8 mb-2 text-orange-400" />
                 <h3 className="font-semibold mb-1">Имэйл</h3>
-                <p className="text-blue-200">
+                <div className="text-blue-200">
                   <ContactInfo showPhone={false} showEmail={true} showAddress={false} className="text-blue-200" />
-                </p>
+                </div>
                 <p className="text-sm text-blue-300">24/7 онлайн</p>
               </div>
               

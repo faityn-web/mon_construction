@@ -37,7 +37,33 @@ npm run build
 
 # Production server эхлүүлэх
 npm start
+
+# Жишээ FAQ өгөгдөл оруулах
+npm run init-faq
 ```
+
+### ⚠️ Анхдагч өгөгдөл оруулах
+
+Сайтыг анх ашиглахдаа дараах алхмуудыг гүйцэтгэнэ үү:
+
+1. **Supabase тохиргоо**:
+   - `.env.local` файлдаа Supabase тохиргоог оруулна
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+   ```
+
+2. **Database schema**:
+   - `supabase-schema.sql` файлыг Supabase-д ажиллуулна
+
+3. **Жишээ өгөгдөл оруулах**:
+   ```bash
+   npm run init-faq
+   ```
+   эсвэл admin хуудаснаас "Жишээ өгөгдөл оруулах" товчийг дарна
+
+4. **Admin хэрэглэгч үүсгэх**:
+   - `/admin` хуудас руу орж анхдагч админ хэрэглэгч үүсгэнэ
 
 ## 📁 Project Structure
 
@@ -109,6 +135,7 @@ src/
 - **contacts** - Холбогдол (contact form-с ирэх)
 - **site_settings** - Сайтын тохиргоо
 - **users** - Админ хэрэгчид
+- **faqs** - Түгээмэл асуулт хариулт (CRUD)
 
 ### Features:
 
@@ -169,6 +196,11 @@ src/
 - **Statistics**: Төслүүд, холбогдол, сэтгэгдэл, статистик
 - **Projects Management**: CRUD operations, status management
 - **Contact Management**: Status tracking, quick actions
+- **FAQ Management**: Түгээмэл асуулт хариултын бүрэн CRUD систем
+  - Ангилалчилсан асуулт (Ерөнхий, Төслийн, Техникийн)
+  - Дараалал тохируулах, хайх, шүүх
+  - Шинэ асуулт нэмэх, засах, устгах
+  - Жишээ өгөгдөл шууд оруулах боломж
 - **Real-time Updates**: Supabase subscriptions
 - **Responsive Design**: Mobile, Tablet, Desktop
 

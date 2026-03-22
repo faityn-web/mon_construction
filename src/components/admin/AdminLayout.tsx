@@ -15,6 +15,7 @@ import {
   User as UserIcon,
   Cog,
   TrendingUp,
+  HelpCircle,
 } from "lucide-react";
 import { initializeData } from "@/lib/data";
 import { useAuth } from "@/contexts/AuthContext";
@@ -30,6 +31,7 @@ const menuItems = [
   { icon: Image, label: "Нүүр хуудас", href: "/admin/hero" },
   { icon: FolderOpen, label: "Төслүүд", href: "/admin/projects" },
   { icon: Settings, label: "Үйлчилгээ", href: "/admin/services" },
+  { icon: HelpCircle, label: "FAQ", href: "/admin/faq" },
   { icon: MessageSquare, label: "Сэтгэгдэл", href: "/admin/testimonials" },
   { icon: Users, label: "Холбогдол", href: "/admin/contacts" },
   { icon: UserIcon, label: "Бидний тухай", href: "/admin/about" },
