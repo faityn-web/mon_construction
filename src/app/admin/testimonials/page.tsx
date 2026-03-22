@@ -171,7 +171,7 @@ export default function AdminTestimonials() {
                     </button>
                     
                     <a
-                      href={`/admin/testimonials/${testimonial.id}/edit`}
+                      href={`/admin/testimonials/${testimonial.id}`}
                       className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"
                       title="Засах"
                     >

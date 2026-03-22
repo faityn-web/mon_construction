@@ -258,7 +258,7 @@ export default function AdminServices() {
                   </button>
 
                   <a
-                    href={`/admin/services/${service.id}/edit`}
+                    href={`/admin/services/${service.id}`}
                     className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"
                     title="Засах"
                   >

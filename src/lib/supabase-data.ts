@@ -158,7 +158,8 @@ export const getTestimonials = async (): Promise<Testimonial[]> => {
   const { data, error } = await supabase
     .from("testimonials")
     .select("*")
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .order("id", { ascending: false });
 
   if (error) {
     console.error("Error fetching testimonials:", error);
@@ -166,6 +167,21 @@ export const getTestimonials = async (): Promise<Testimonial[]> => {
   }
 
   return data || [];
+};
+
+export const getTestimonial = async (id: string): Promise<Testimonial | null> => {
+  const { data, error } = await supabase
+    .from("testimonials")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error("Error fetching testimonial:", error);
+    return null;
+  }
+
+  return data;
 };
 
 export const createTestimonial = async (

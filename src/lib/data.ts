@@ -97,6 +97,21 @@ export const updateService = async (
   if (error) throw error;
 };
 
+export const getService = async (id: string): Promise<Service | null> => {
+  const { data, error } = await supabase
+    .from("services")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error("Error fetching service:", error);
+    return null;
+  }
+
+  return data;
+};
+
 export const deleteService = async (id: string): Promise<void> => {
   const { error } = await supabase.from("services").delete().eq("id", id);
 
