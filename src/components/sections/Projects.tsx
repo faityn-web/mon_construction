@@ -61,7 +61,6 @@ export default function Projects() {
     const loadProjects = async () => {
       try {
         const data = await getProjectsHome();
-        console.log(data);
 
         setProjectData(data.length > 0 ? data : projects);
       } catch (error) {

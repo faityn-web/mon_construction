@@ -1,33 +1,29 @@
-'use client'
+"use client";
 
-import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useEffect } from 'react'
-import { ArrowRight, Play } from 'lucide-react'
-import { getHeroes } from '@/lib/data'
-import { Hero as HeroType } from '@/types'
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import { ArrowRight, Play } from "lucide-react";
+import { getHeroes } from "@/lib/data";
+import { Hero as HeroType } from "@/types";
 import { getSettings } from "@/lib/supabase-data";
 import { SiteSettings } from "@/types";
 
 export default function Hero() {
-  const [currentSlide, setCurrentSlide] = useState(0)
-  const [heroSlides, setHeroSlides] = useState<HeroType[]>([])
-  const [loading, setLoading] = useState(true)
-  const [settings, setSettings] = useState<SiteSettings | null>(null)
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [heroSlides, setHeroSlides] = useState<HeroType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
 
   useEffect(() => {
     const loadHeroes = async () => {
       try {
-        const heroes = await getHeroes()
+        const heroes = await getHeroes();
 
-        console.log(heroes);
-        
-        const activeHeroes = heroes.filter(hero => hero.active)
+        const activeHeroes = heroes.filter((hero) => hero.active);
 
-        console.log(activeHeroes);
-        
-        setHeroSlides(activeHeroes)
+        setHeroSlides(activeHeroes);
       } catch (error) {
-        console.error('Error loading heroes:', error)
+        console.error("Error loading heroes:", error);
         // Fallback to default data if API fails
         // setHeroSlides([
         //   {
@@ -43,12 +39,12 @@ export default function Hero() {
         //   }
         // ])
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    loadHeroes()
-  }, [])
+    loadHeroes();
+  }, []);
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -56,7 +52,7 @@ export default function Hero() {
         const data = await getSettings();
         setSettings(data);
       } catch (error) {
-        console.error('Error loading settings:', error);
+        console.error("Error loading settings:", error);
       }
     };
 
@@ -64,23 +60,26 @@ export default function Hero() {
   }, []);
 
   useEffect(() => {
-    if (heroSlides.length <= 1) return
-    
+    if (heroSlides.length <= 1) return;
+
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroSlides.length)
-    }, 5000)
-    return () => clearInterval(timer)
-  }, [heroSlides.length])
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [heroSlides.length]);
 
   const slideVariants = {
     enter: { opacity: 0, x: 100 },
     center: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: -100 }
-  }
+    exit: { opacity: 0, x: -100 },
+  };
 
   if (loading) {
     return (
-      <section id="home" className="relative h-screen overflow-hidden bg-gray-900">
+      <section
+        id="home"
+        className="relative h-screen overflow-hidden bg-gray-900"
+      >
         <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-blue-900/70"></div>
         <div className="relative h-full flex items-center">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
@@ -98,18 +97,21 @@ export default function Hero() {
           </div>
         </div>
       </section>
-    )
+    );
   }
 
   if (heroSlides.length === 0) {
     return (
-      <section id="home" className="relative h-screen overflow-hidden bg-gray-900">
+      <section
+        id="home"
+        className="relative h-screen overflow-hidden bg-gray-900"
+      >
         <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-blue-900/70"></div>
         <div className="relative h-full flex items-center">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
             <div className="max-w-3xl text-center">
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6">
-                {settings?.company_name || 'МонКонстракшн'}
+                {settings?.company_name || "МонКонстракшн"}
               </h1>
               <p className="text-xl md:text-2xl text-orange-400 mb-8">
                 Чанарыг тэргүүлж, туршлагатай бүтээгдэхүүн хүргэнэ
@@ -118,7 +120,7 @@ export default function Hero() {
           </div>
         </div>
       </section>
-    )
+    );
   }
 
   return (
@@ -134,9 +136,11 @@ export default function Hero() {
           className="absolute inset-0"
         >
           {/* Background Image with Overlay */}
-          <div 
+          <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url(${heroSlides[currentSlide].image})` }}
+            style={{
+              backgroundImage: `url(${heroSlides[currentSlide].image})`,
+            }}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent"></div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
@@ -154,7 +158,7 @@ export default function Hero() {
                 >
                   {heroSlides[currentSlide].title}
                 </motion.h1>
-                
+
                 <motion.h2
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -183,7 +187,7 @@ export default function Hero() {
                     Манай төслүүд
                     <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </button>
-                  
+
                   <button className="border-2 border-white text-white hover:bg-white hover:text-blue-900 px-8 py-4 rounded-lg font-semibold transition-all flex items-center justify-center group shadow-xl backdrop-blur-sm bg-white/10">
                     <Play className="mr-2 w-5 h-5" />
                     Холбоо барих
@@ -203,9 +207,9 @@ export default function Hero() {
               key={index}
               onClick={() => setCurrentSlide(index)}
               className={`w-3 h-3 rounded-full transition-all ${
-                currentSlide === index 
-                  ? 'bg-orange-500 w-8' 
-                  : 'bg-white/50 hover:bg-white/75'
+                currentSlide === index
+                  ? "bg-orange-500 w-8"
+                  : "bg-white/50 hover:bg-white/75"
               }`}
             />
           ))}
@@ -217,5 +221,5 @@ export default function Hero() {
         <div className="w-64 h-96 bg-gradient-to-t from-blue-900/50 to-transparent opacity-30"></div>
       </div>
     </section>
-  )
+  );
 }

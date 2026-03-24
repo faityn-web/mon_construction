@@ -14,7 +14,6 @@ export const uploadImage = async (
       cacheControl: "3600",
       upsert: false,
     });
-  console.log(data);
 
   if (error) {
     console.error("Error uploading image:", error);

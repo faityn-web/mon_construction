@@ -31,6 +31,8 @@ export default function AdminFAQs() {
     const loadFAQs = async () => {
       try {
         const data = await getFAQs();
+        console.log(data);
+
         setFaqs(data);
       } catch (error) {
         console.error("Error loading FAQs:", error);
@@ -153,10 +155,10 @@ export default function AdminFAQs() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Түгээмэл Асуулт Хариулт</h1>
-            <p className="text-gray-600">
-              Нийт {filteredFAQs.length} асуулт
-            </p>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Түгээмэл Асуулт Хариулт
+            </h1>
+            <p className="text-gray-600">Нийт {filteredFAQs.length} асуулт</p>
           </div>
           <div className="flex items-center space-x-4">
             <a
@@ -277,9 +279,7 @@ export default function AdminFAQs() {
                 {/* Actions */}
                 <div className="flex items-center space-x-2">
                   <button
-                    onClick={() =>
-                      handleStatusChange(faq.id, !faq.active)
-                    }
+                    onClick={() => handleStatusChange(faq.id, !faq.active)}
                     className={`p-2 rounded-lg transition-colors ${
                       faq.active
                         ? "bg-green-100 text-green-600 hover:bg-green-200"
